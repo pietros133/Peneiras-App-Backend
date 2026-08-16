@@ -212,7 +212,7 @@ A API estará disponível localmente na porta configurada pela aplicação.
 
 ---
 
-## 📱 Frontend
+## Frontend
 
 O frontend da aplicação **Peneiras** foi desenvolvido utilizando **Flutter**.
 
