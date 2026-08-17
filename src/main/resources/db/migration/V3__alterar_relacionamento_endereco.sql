@@ -1,0 +1,2 @@
+ALTER TABLE users
+ALTER COLUMN endereco_id DROP NOT NULL;
