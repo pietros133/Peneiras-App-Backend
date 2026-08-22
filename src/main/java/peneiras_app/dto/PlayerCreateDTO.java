@@ -4,12 +4,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import peneiras_app.entity.enums.PeDominante;
-import peneiras_app.entity.enums.Posicao;
+import peneiras_app.entity.enums.DominantFoot;
+import peneiras_app.entity.enums.Position;
 
 import java.time.LocalDate;
 
-public class UserCreateDTO {
+public class PlayerCreateDTO {
 
     @NotBlank
     private String name;
@@ -26,10 +26,10 @@ public class UserCreateDTO {
     private LocalDate birthDate;
 
     @NotNull
-    private Posicao position;
+    private Position position;
 
     @NotNull
-    private PeDominante dominantFoot;
+    private DominantFoot dominantFoot;
 
     @NotNull
     private Integer heightCm;
@@ -67,19 +67,19 @@ public class UserCreateDTO {
         this.birthDate = birthDate;
     }
 
-    public Posicao getPosition() {
+    public Position getPosition() {
         return position;
     }
 
-    public void setPosition(Posicao position) {
+    public void setPosition(Position position) {
         this.position = position;
     }
 
-    public PeDominante getDominantFoot() {
+    public DominantFoot getDominantFoot() {
         return dominantFoot;
     }
 
-    public void setDominantFoot(PeDominante dominantFoot) {
+    public void setDominantFoot(DominantFoot dominantFoot) {
         this.dominantFoot = dominantFoot;
     }
 

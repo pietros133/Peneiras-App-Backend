@@ -1,5 +1,5 @@
 package peneiras_app.entity.enums;
-public enum Categoria {
+public enum Category {
     FUTEBOL,
     FUTSAL
 }

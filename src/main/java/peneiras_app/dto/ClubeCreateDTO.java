@@ -1,48 +1,28 @@
-package peneiras_app.entity;
+package peneiras_app.dto;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import peneiras_app.entity.enums.Category;
 
-import java.util.UUID;
-
-@Entity
-@Table(name = "clube")
-public class Clube {
-
-    @Id
-    @GeneratedValue
-    private UUID id;
+public class ClubeCreateDTO {
 
     @NotBlank
-    @Column(nullable = false)
     private String name;
 
     @NotBlank
-    @Column(nullable = false)
+    @Email
     private String email;
 
     @NotBlank
     @Size(min = 8, max = 72)
-    @Column(nullable = false)
     private String password;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Category category;
 
-    @OneToOne
-    @JoinColumn(name = "endereco_id", nullable = true)
-    private Endereco address;
-
-    @Column(nullable = true)
-    private String clubeImg;
-
     @NotNull
-    @Column(nullable = false)
     private String phone;
 
     private String whatsapp;
@@ -79,22 +59,6 @@ public class Clube {
 
     public void setCategory(Category category) {
         this.category = category;
-    }
-
-    public Endereco getAddress() {
-        return address;
-    }
-
-    public void setAddress(Endereco address) {
-        this.address = address;
-    }
-
-    public String getClubeImg() {
-        return clubeImg;
-    }
-
-    public void setClubeImg(String clubeImg) {
-        this.clubeImg = clubeImg;
     }
 
     public String getPhone() {

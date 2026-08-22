@@ -1,15 +1,13 @@
 package peneiras_app.repository;
 
+import org.apache.catalina.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import peneiras_app.entity.Clube;
 import peneiras_app.entity.Player;
 
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
-public interface ClubeRepository extends JpaRepository <Clube, UUID> {
+public interface PlayerRepository extends JpaRepository<Player, UUID> {
     boolean existsByEmail(String email);
-    Optional<Clube> findByEmail(String email);
+    Optional<Player> findByEmail(String email);
 }

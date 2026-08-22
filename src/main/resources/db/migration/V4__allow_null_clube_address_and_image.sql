@@ -1,0 +1,5 @@
+ALTER TABLE clube
+    ALTER COLUMN endereco_id DROP NOT NULL;
+
+ALTER TABLE clube
+    ALTER COLUMN clube_img DROP NOT NULL;

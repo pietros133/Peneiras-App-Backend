@@ -1,6 +1,6 @@
 package peneiras_app.entity.enums;
 
-public enum Posicao{
+public enum Position {
     GOLEIRO,
     ZAGUEIRO,
     LATERAL,

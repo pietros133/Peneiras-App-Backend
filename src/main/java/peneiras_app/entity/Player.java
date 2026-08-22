@@ -4,15 +4,15 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import peneiras_app.entity.enums.PeDominante;
-import peneiras_app.entity.enums.Posicao;
+import peneiras_app.entity.enums.DominantFoot;
+import peneiras_app.entity.enums.Position;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "player")
+public class Player {
 
     @Id
     @GeneratedValue
@@ -38,12 +38,12 @@ public class User {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Posicao position;
+    private Position position;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PeDominante dominantFoot;
+    private DominantFoot dominantFoot;
 
     @NotNull
     @Column(nullable = false)
@@ -88,19 +88,19 @@ public class User {
         this.birthDate = birthDate;
     }
 
-    public Posicao getPosition() {
+    public Position getPosition() {
         return position;
     }
 
-    public void setPosition(Posicao position) {
+    public void setPosition(Position position) {
         this.position = position;
     }
 
-    public PeDominante getDominantFoot() {
+    public DominantFoot getDominantFoot() {
         return dominantFoot;
     }
 
-    public void setDominantFoot(PeDominante dominantFoot) {
+    public void setDominantFoot(DominantFoot dominantFoot) {
         this.dominantFoot = dominantFoot;
     }
 
@@ -112,15 +112,19 @@ public class User {
         this.heightCm = heightCm;
     }
 
+    public Endereco getAddress() {
+        return address;
+    }
+
+    public void setAddress(Endereco address) {
+        this.address = address;
+    }
+
     public String getUserImg() {
         return userImg;
     }
 
     public void setUserImg(String userImg) {
         this.userImg = userImg;
-    }
-
-    public Endereco getAddress() {
-        return address;
     }
 }

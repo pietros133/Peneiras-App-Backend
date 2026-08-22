@@ -3,9 +3,9 @@ package peneiras_app.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import peneiras_app.entity.enums.Categoria;
+import peneiras_app.entity.enums.Category;
 import peneiras_app.entity.enums.DocumentType;
-import peneiras_app.entity.enums.Modalidade;
+import peneiras_app.entity.enums.Modality;
 import peneiras_app.entity.enums.Uniform;
 
 import java.time.LocalDate;
@@ -23,12 +23,12 @@ public class Peneira {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Categoria category;
+    private Category category;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Modalidade modality;
+    private Modality modality;
 
     @NotNull
     @Column(nullable = false)
@@ -64,19 +64,19 @@ public class Peneira {
         this.date = date;
     }
 
-    public Categoria getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(Categoria category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
-    public Modalidade getModality() {
+    public Modality getModality() {
         return modality;
     }
 
-    public void setModality(Modalidade modality) {
+    public void setModality(Modality modality) {
         this.modality = modality;
     }
 

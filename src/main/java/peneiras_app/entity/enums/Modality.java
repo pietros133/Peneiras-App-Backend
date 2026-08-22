@@ -1,6 +1,6 @@
 package peneiras_app.entity.enums;
 
-public enum Modalidade {
+public enum Modality {
     CAMPO,
     SOCIETY,
     QUADRA

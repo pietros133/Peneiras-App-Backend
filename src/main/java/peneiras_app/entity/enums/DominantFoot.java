@@ -1,6 +1,6 @@
 package peneiras_app.entity.enums;
 
-public enum PeDominante {
+public enum DominantFoot {
     DIREITO,
     ESQUERDO,
     AMBOS
