@@ -1,7 +1,7 @@
-package peneiras_app.entity;
+package peneiras_app.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import peneiras_app.entity.enums.Category;
 import peneiras_app.entity.enums.DocumentType;
@@ -11,63 +11,29 @@ import peneiras_app.entity.enums.Uniform;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
-import java.util.UUID;
 
-@Entity
-@Table(name = "peneira")
-public class Peneira {
-
-    @Id
-    @GeneratedValue
-    private UUID id;
+public class PeneiraCreateDTO {
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Category category;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Modality modality;
 
     @NotNull
-    @Column(nullable = false)
     private LocalDate date;
 
     @NotNull
-    @Column(nullable = false)
     private LocalTime hour;
 
-    @ElementCollection
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(
-            name = "peneira_uniform",
-            joinColumns = @JoinColumn(name = "peneira_id")
-    )
-    @Column(name = "uniform", nullable = false)
+    @NotEmpty
     private Set<Uniform> uniforms;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private DocumentType documents;
 
     @NotBlank
-    @Column(nullable = false)
     private String about;
-
-    @ManyToOne
-    @JoinColumn(name = "clube_id", nullable = false)
-    private Clube clube;
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
 
     public Category getCategory() {
         return category;
@@ -85,6 +51,14 @@ public class Peneira {
         this.modality = modality;
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     public LocalTime getHour() {
         return hour;
     }
@@ -92,6 +66,7 @@ public class Peneira {
     public void setHour(LocalTime hour) {
         this.hour = hour;
     }
+
     public Set<Uniform> getUniforms() {
         return uniforms;
     }
@@ -99,6 +74,7 @@ public class Peneira {
     public void setUniforms(Set<Uniform> uniforms) {
         this.uniforms = uniforms;
     }
+
     public DocumentType getDocuments() {
         return documents;
     }
@@ -113,17 +89,5 @@ public class Peneira {
 
     public void setAbout(String about) {
         this.about = about;
-    }
-
-    public Clube getClube() {
-        return clube;
-    }
-
-    public void setClube(Clube clube) {
-        this.clube = clube;
-    }
-
-    public UUID getId() {
-        return id;
     }
 }

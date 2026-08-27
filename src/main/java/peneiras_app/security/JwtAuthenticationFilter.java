@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -29,44 +30,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        // 1. Pega o header Authorization
         String authHeader = request.getHeader("Authorization");
 
-        // 2. Verifica se existe o Bearer Token
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 3. Remove o "Bearer " e fica somente com o JWT
         String token = authHeader.substring(7);
 
         try {
 
-            // 4. Extrai o email do JWT
-            String email = jwtService.extractEmail(token);
+            UUID userId = jwtService.extractUserId(token);
 
-            // 5. Se conseguiu extrair o email e ainda não existe
-            //    uma autenticação nesse request
-            if (email != null &&
-                    SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                // 6. Cria a autenticação do usuário
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
-                                email,
+                                userId,
                                 null,
                                 null
                         );
 
-                // 7. Adiciona detalhes da requisição
                 authentication.setDetails(
                         new WebAuthenticationDetailsSource()
                                 .buildDetails(request)
                 );
 
-                // 8. Coloca o usuário autenticado no SecurityContext
                 SecurityContextHolder
                         .getContext()
                         .setAuthentication(authentication);
@@ -74,11 +64,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         } catch (Exception e) {
 
-            // JWT inválido/expirado
             SecurityContextHolder.clearContext();
         }
 
-        // 9. Continua a requisição
         filterChain.doFilter(request, response);
     }
 }

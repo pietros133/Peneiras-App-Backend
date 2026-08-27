@@ -35,24 +35,33 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
+                        // Login
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/auth/login"
                         ).permitAll()
 
+                        // Cadastro de Player
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/auth/register"
                         ).permitAll()
 
+                        // Cadastro de Clube
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/auth/clube/register"
                         ).permitAll()
 
+                        // Listar peneiras - público
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/peneiras"
+                        ).permitAll()
+
+                        // Todas as outras rotas precisam de autenticação
                         .anyRequest().authenticated()
                 )
-
 
                 .addFilterBefore(
                         jwtAuthenticationFilter,

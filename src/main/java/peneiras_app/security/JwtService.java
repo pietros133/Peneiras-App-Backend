@@ -8,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class JwtService {
@@ -21,10 +22,10 @@ public class JwtService {
         );
     }
 
-    public String generateToken(String email) {
+    public String generateToken(UUID uuid) {
 
         return Jwts.builder()
-                .subject(email)
+                .subject(uuid.toString())
                 .issuedAt(new Date())
                 .expiration(
                         new Date(
@@ -35,13 +36,15 @@ public class JwtService {
                 .compact();
     }
 
-    public String extractEmail(String token) {
+    public UUID extractUserId(String token) {
 
-        return Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+        return UUID.fromString(
+                Jwts.parser()
+                        .verifyWith(getSigningKey())
+                        .build()
+                        .parseSignedClaims(token)
+                        .getPayload()
+                        .getSubject()
+        );
     }
 }

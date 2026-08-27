@@ -127,4 +127,7 @@ public class Player {
     public void setUserImg(String userImg) {
         this.userImg = userImg;
     }
+    public UUID getId() {
+        return id;
+    }
 }

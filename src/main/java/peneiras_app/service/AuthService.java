@@ -48,12 +48,11 @@ public class AuthService {
                 throw new RuntimeException("Email ou senha inválidos");
             }
 
-            // Gera o JWT
+            // Gera o JWT usando o ID do Player
             String token = jwtService.generateToken(
-                    player.getEmail()
+                    player.getId()
             );
 
-            // Retorna o JWT
             return new AuthResponseDTO(
                     "Login realizado com sucesso",
                     token
@@ -76,15 +75,15 @@ public class AuthService {
                 throw new RuntimeException("Email ou senha inválidos");
             }
 
-            // Gera o JWT
+            // Gera o JWT usando o ID do Clube
             String token = jwtService.generateToken(
-                    clube.getEmail()
+                    clube.getId()
             );
+
             return new AuthResponseDTO(
                     "Login realizado com sucesso",
                     token
             );
-
         }
 
         // 5. Email não existe em nenhuma das entidades

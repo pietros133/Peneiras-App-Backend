@@ -120,4 +120,12 @@ public class Clube {
     public void setInstagramAccount(String instagramAccount) {
         this.instagramAccount = instagramAccount;
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 }

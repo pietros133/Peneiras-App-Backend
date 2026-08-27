@@ -13,6 +13,8 @@ import peneiras_app.repository.EnderecoRepository;
 import peneiras_app.repository.PlayerRepository;
 import peneiras_app.repository.ClubeRepository;
 
+import java.util.UUID;
+
 @Service
 public class EnderecoService {
 
@@ -35,38 +37,33 @@ public class EnderecoService {
 
     public Endereco cadastrarEndereco(EnderecoDTO dto) {
 
-
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
 
-        String email = authentication.getName();
+        UUID userId = (UUID) authentication.getPrincipal();
 
-
-        Player player = playerRepository.findByEmail(email)
+        Player player = playerRepository
+                .findById(userId)
                 .orElse(null);
-
 
         Clube clube = null;
 
         if (player == null) {
-            clube = clubeRepository.findByEmail(email)
+            clube = clubeRepository
+                    .findById(userId)
                     .orElse(null);
         }
-
 
         if (player == null && clube == null) {
             throw new RuntimeException("Usuário não encontrado");
         }
 
-
         ViaCepResponseDTO viaCep =
                 viaCepService.buscarCep(dto.getCep());
-
 
         if (viaCep == null || viaCep.isErro()) {
             throw new RuntimeException("CEP não encontrado");
         }
-
 
         Endereco endereco = new Endereco(
                 viaCep.getLogradouro(),
@@ -78,26 +75,18 @@ public class EnderecoService {
                 dto.getComplemento()
         );
 
-
         endereco = enderecoRepository.save(endereco);
 
-
         if (player != null) {
-
             player.setAddress(endereco);
-
             playerRepository.save(player);
         }
 
-
         if (clube != null) {
-
             clube.setAddress(endereco);
-
             clubeRepository.save(clube);
         }
 
-        // 11. Retorna o endereço cadastrado
         return endereco;
     }
 }
