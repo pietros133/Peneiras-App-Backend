@@ -35,9 +35,18 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
+
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/auth/login"
+                        ).permitAll()
+
+
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/auth/forgot-password",
+                                "/auth/verify-code",
+                                "/auth/reset-password"
                         ).permitAll()
 
 
@@ -51,6 +60,7 @@ public class SecurityConfig {
                                 HttpMethod.POST,
                                 "/api/auth/clube/register"
                         ).permitAll()
+
 
                         .requestMatchers(
                                 HttpMethod.GET,

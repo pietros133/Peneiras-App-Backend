@@ -17,30 +17,36 @@ public class AuthService {
     private final ClubeRepository clubeRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final EmailService emailService;
+    private final ResetCodeService resetCodeService;
+    private final PasswordResetService passwordResetService;
 
     public AuthService(
             PlayerRepository playerRepository,
             ClubeRepository clubeRepository,
             PasswordEncoder passwordEncoder,
-            JwtService jwtService
+            JwtService jwtService,
+            EmailService emailService,
+            ResetCodeService resetCodeService,
+            PasswordResetService passwordResetService
     ) {
         this.playerRepository = playerRepository;
         this.clubeRepository = clubeRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.emailService = emailService;
+        this.resetCodeService = resetCodeService;
+        this.passwordResetService = passwordResetService;
     }
 
     public AuthResponseDTO login(AuthDTO dto) {
 
-        // 1. Procura o email entre os Players
         Player player = playerRepository
                 .findByEmail(dto.getEmail())
                 .orElse(null);
 
-        // 2. Se encontrou um Player
         if (player != null) {
 
-            // Confere a senha
             if (!passwordEncoder.matches(
                     dto.getPassword(),
                     player.getPassword()
@@ -48,7 +54,6 @@ public class AuthService {
                 throw new RuntimeException("Email ou senha inválidos");
             }
 
-            // Gera o JWT usando o ID do Player
             String token = jwtService.generateToken(
                     player.getId()
             );
@@ -59,15 +64,12 @@ public class AuthService {
             );
         }
 
-        // 3. Se não encontrou Player, procura entre os Clubes
         Clube clube = clubeRepository
                 .findByEmail(dto.getEmail())
                 .orElse(null);
 
-        // 4. Se encontrou um Clube
         if (clube != null) {
 
-            // Confere a senha
             if (!passwordEncoder.matches(
                     dto.getPassword(),
                     clube.getPassword()
@@ -75,7 +77,6 @@ public class AuthService {
                 throw new RuntimeException("Email ou senha inválidos");
             }
 
-            // Gera o JWT usando o ID do Clube
             String token = jwtService.generateToken(
                     clube.getId()
             );
@@ -86,7 +87,116 @@ public class AuthService {
             );
         }
 
-        // 5. Email não existe em nenhuma das entidades
         throw new RuntimeException("Email ou senha inválidos");
+    }
+
+
+
+
+    public void forgotPassword(String email) {
+
+        Player player = playerRepository
+                .findByEmail(email)
+                .orElse(null);
+
+        if (player != null) {
+
+            String code = resetCodeService.generateCode();
+
+            passwordResetService.saveCode(email, code);
+
+            emailService.sendResetCode(email, code);
+
+            return;
+        }
+
+        Clube clube = clubeRepository
+                .findByEmail(email)
+                .orElse(null);
+
+        if (clube != null) {
+
+            String code = resetCodeService.generateCode();
+
+            passwordResetService.saveCode(email, code);
+
+            emailService.sendResetCode(email, code);
+
+            return;
+        }
+
+        throw new RuntimeException("Email não encontrado");
+    }
+
+
+    public void verifyResetCode(
+            String email,
+            String code
+    ) {
+
+        boolean valid = passwordResetService.verifyCode(
+                email,
+                code
+        );
+
+        if (!valid) {
+            throw new RuntimeException("Código inválido");
+        }
+    }
+
+
+    public void resetPassword(
+            String email,
+            String code,
+            String newPassword
+    ) {
+
+        boolean valid = passwordResetService.verifyCode(
+                email,
+                code
+        );
+
+        if (!valid) {
+            throw new RuntimeException("Código inválido");
+        }
+
+        String encodedPassword =
+                passwordEncoder.encode(newPassword);
+
+        // PLAYER
+
+        Player player = playerRepository
+                .findByEmail(email)
+                .orElse(null);
+
+        if (player != null) {
+
+            player.setPassword(encodedPassword);
+
+            playerRepository.save(player);
+
+            passwordResetService.removeCode(email);
+
+            return;
+        }
+
+        // CLUBE
+
+        Clube clube = clubeRepository
+                .findByEmail(email)
+                .orElse(null);
+
+        if (clube != null) {
+
+            clube.setPassword(encodedPassword);
+
+            clubeRepository.save(clube);
+
+            passwordResetService.removeCode(email);
+
+            return;
+        }
+
+        throw new RuntimeException("Email não encontrado");
     }
 }
