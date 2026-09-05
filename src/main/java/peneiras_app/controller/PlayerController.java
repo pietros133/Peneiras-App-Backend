@@ -4,10 +4,13 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import peneiras_app.dto.PlayerResponseDTO;
 import peneiras_app.dto.PlayerUpdateDTO;
 import peneiras_app.service.EditPlayerService;
+import peneiras_app.service.UserPhotoService;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -15,9 +18,14 @@ import java.util.UUID;
 public class PlayerController {
 
     private final EditPlayerService editPlayerService;
+    private final UserPhotoService userPhotoService;
 
-    public PlayerController(EditPlayerService editPlayerService) {
+    public PlayerController(
+            EditPlayerService editPlayerService,
+            UserPhotoService userPhotoService
+    ) {
         this.editPlayerService = editPlayerService;
+        this.userPhotoService = userPhotoService;
     }
 
     @PutMapping("/me")
@@ -32,5 +40,19 @@ public class PlayerController {
                 editPlayerService.execute(userId, dto);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/me/photo")
+    public ResponseEntity<?> uploadPhoto(
+            @RequestParam("photo") MultipartFile photo,
+            Authentication authentication
+    ) throws IOException {
+
+        UUID playerId = (UUID) authentication.getPrincipal();
+
+        String imageUrl =
+                userPhotoService.uploadPlayerPhoto(playerId, photo);
+
+        return ResponseEntity.ok(imageUrl);
     }
 }
