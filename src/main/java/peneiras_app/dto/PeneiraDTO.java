@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
 
-public record PeneiraCreateDTO(
+public record PeneiraDTO(
         @NotNull(message = "Categoria é obrigatória")
         Category category,
         @NotNull(message = "Modalidade é obrigatória")

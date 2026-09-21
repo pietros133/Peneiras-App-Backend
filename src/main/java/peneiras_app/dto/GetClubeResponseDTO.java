@@ -9,6 +9,8 @@ public record GetClubeResponseDTO(
         String phone,
         String whatsapp,
         String instagramAccount,
+        String userImg,
         AddressDTO address
-) {
+        ) {
+
 }

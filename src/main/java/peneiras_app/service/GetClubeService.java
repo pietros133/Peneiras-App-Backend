@@ -42,6 +42,7 @@ public class GetClubeService {
                 clube.getPhone(),
                 clube.getWhatsapp(),
                 clube.getInstagramAccount(),
+                clube.getClubeImg(),
                 addressDTO
         );
     }
