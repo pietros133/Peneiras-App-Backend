@@ -22,10 +22,11 @@ public class JwtService {
         );
     }
 
-    public String generateToken(UUID uuid) {
+    public String generateToken(UUID uuid, boolean isClube) {
 
         return Jwts.builder()
                 .subject(uuid.toString())
+                .claim("isClube", isClube)
                 .issuedAt(new Date())
                 .expiration(
                         new Date(
@@ -46,5 +47,15 @@ public class JwtService {
                         .getPayload()
                         .getSubject()
         );
+    }
+
+    public boolean extractIsClube(String token) {
+
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("isClube", Boolean.class);
     }
 }

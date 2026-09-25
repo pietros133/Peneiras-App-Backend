@@ -59,11 +59,12 @@ public class AuthService {
             }
 
             String accessToken = jwtService.generateToken(
-                    player.getId()
+                    player.getId(),
+                    false
             );
 
-            RefreshToken refreshToken =
-                    refreshTokenService.createRefreshToken(player);
+            RefreshToken refreshToken
+                    = refreshTokenService.createRefreshToken(player);
 
             return new AuthResponseDTO(
                     "Login realizado com sucesso",
@@ -86,11 +87,12 @@ public class AuthService {
             }
 
             String accessToken = jwtService.generateToken(
-                    clube.getId()
+                    clube.getId(),
+                    true
             );
 
-            RefreshToken refreshToken =
-                    refreshTokenService.createRefreshToken(clube);
+            RefreshToken refreshToken
+                    = refreshTokenService.createRefreshToken(clube);
 
             return new AuthResponseDTO(
                     "Login realizado com sucesso",
@@ -104,8 +106,8 @@ public class AuthService {
 
     public AuthResponseDTO refreshToken(String token) {
 
-        RefreshToken refreshToken =
-                refreshTokenService.findByToken(token);
+        RefreshToken refreshToken
+                = refreshTokenService.findByToken(token);
 
         refreshTokenService.verifyExpiration(refreshToken);
 
@@ -114,13 +116,15 @@ public class AuthService {
         if (refreshToken.getPlayer() != null) {
 
             accessToken = jwtService.generateToken(
-                    refreshToken.getPlayer().getId()
+                    refreshToken.getPlayer().getId(),
+                    false
             );
 
         } else if (refreshToken.getClube() != null) {
 
             accessToken = jwtService.generateToken(
-                    refreshToken.getClube().getId()
+                    refreshToken.getClube().getId(),
+                    true
             );
 
         } else {
@@ -202,8 +206,8 @@ public class AuthService {
             throw new RuntimeException("Código inválido");
         }
 
-        String encodedPassword =
-                passwordEncoder.encode(newPassword);
+        String encodedPassword
+                = passwordEncoder.encode(newPassword);
 
         Player player = playerRepository
                 .findByEmail(email)

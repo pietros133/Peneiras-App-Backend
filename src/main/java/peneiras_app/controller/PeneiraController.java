@@ -3,6 +3,7 @@ package peneiras_app.controller;
 import java.util.List;
 import java.util.UUID;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,29 +18,28 @@ import peneiras_app.dto.MessageResponseDTO;
 import peneiras_app.entity.Peneira;
 import peneiras_app.service.CreatePeneiraService;
 import peneiras_app.service.EditPeneiraService;
+import peneiras_app.service.GetPeneiraByClubeIdService;
 import peneiras_app.service.GetPeneiraService;
-import peneiras_app.service.GetPeneiraByIdService;
+import peneiras_app.service.GetPeneiraByPeneiraIdService;
 
 @RestController
 @RequestMapping("/peneiras")
 public class PeneiraController {
 
-    private final CreatePeneiraService createPeneiraService;
-    private final GetPeneiraService getPeneirasService;
-    private final EditPeneiraService editPeneiraService;
-    private final GetPeneiraByIdService getPeneiraByIdService;
+    @Autowired
+    private CreatePeneiraService createPeneiraService;
 
-    public PeneiraController(
-            CreatePeneiraService createPeneiraService,
-            GetPeneiraService getPeneirasService,
-            EditPeneiraService editPeneiraService,
-            GetPeneiraByIdService getPeneiraByIdService
-    ) {
-        this.createPeneiraService = createPeneiraService;
-        this.getPeneirasService = getPeneirasService;
-        this.editPeneiraService = editPeneiraService;
-        this.getPeneiraByIdService = getPeneiraByIdService;
-    }
+    @Autowired
+    private GetPeneiraService getPeneirasService;
+
+    @Autowired
+    private EditPeneiraService editPeneiraService;
+
+    @Autowired
+    private GetPeneiraByPeneiraIdService getPeneiraByPeneiraIdService;
+
+    @Autowired
+    private GetPeneiraByClubeIdService getPeneiraByClubeIdService;
 
     @PostMapping
     public ResponseEntity<PeneiraResponseDTO> create(
@@ -87,12 +87,35 @@ public class PeneiraController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PeneiraDTO> getPeneiraDetails(
+    public ResponseEntity<PeneiraResponseDTO> getPeneiraDetails(
             @PathVariable UUID id
     ) {
 
-        PeneiraDTO response
-                = getPeneiraByIdService.execute(id);
+        PeneiraResponseDTO response
+                = getPeneiraByPeneiraIdService.execute(id);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/clube")
+    public ResponseEntity<List<GetPeneirasDTO>> getPeneirasByClubeId(
+            Authentication authentication
+    ) {
+
+        boolean isClube = authentication.getAuthorities()
+                .stream()
+                .anyMatch(
+                        authority -> authority.getAuthority().equals("ROLE_CLUBE")
+                );
+
+        if (!isClube) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        UUID clubeId = (UUID) authentication.getPrincipal();
+
+        List<GetPeneirasDTO> response
+                = getPeneiraByClubeIdService.execute(clubeId);
 
         return ResponseEntity.ok(response);
     }

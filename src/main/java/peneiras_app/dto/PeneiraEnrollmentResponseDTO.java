@@ -5,13 +5,13 @@ import java.util.UUID;
 
 public class PeneiraEnrollmentResponseDTO {
 
-    private UUID id;
-    private PeneiraResponseDTO peneira;
-    private LocalDateTime enrolledAt;
+    private final UUID id;
+    private final GetPeneirasDTO peneira;
+    private final LocalDateTime enrolledAt;
 
     public PeneiraEnrollmentResponseDTO(
             UUID id,
-            PeneiraResponseDTO peneira,
+            GetPeneirasDTO peneira,
             LocalDateTime enrolledAt
     ) {
         this.id = id;
@@ -23,7 +23,7 @@ public class PeneiraEnrollmentResponseDTO {
         return id;
     }
 
-    public PeneiraResponseDTO getPeneira() {
+    public GetPeneirasDTO getPeneira() {
         return peneira;
     }
 

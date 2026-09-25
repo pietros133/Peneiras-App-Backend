@@ -11,53 +11,49 @@ import peneiras_app.service.PeneiraEnrollmentService;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import peneiras_app.dto.MessageResponseDTO;
 
 @RestController
 @RequestMapping("/peneiras")
 public class PeneiraEnrollmentController {
 
-    private final PeneiraEnrollmentService peneiraEnrollmentService;
-    private final GetPeneiraEnrollmentService getPeneiraEnrollmentService;
-
-    public PeneiraEnrollmentController(
-            PeneiraEnrollmentService peneiraEnrollmentService,
-            GetPeneiraEnrollmentService getPeneiraEnrollmentService
-    ) {
-        this.peneiraEnrollmentService = peneiraEnrollmentService;
-        this.getPeneiraEnrollmentService = getPeneiraEnrollmentService;
-    }
+    @Autowired
+    private PeneiraEnrollmentService peneiraEnrollmentService;
+    @Autowired
+    private GetPeneiraEnrollmentService getPeneiraEnrollmentService;
 
     @PostMapping("/{peneiraId}/enroll")
-    public ResponseEntity<Void> enroll(
+    public ResponseEntity<MessageResponseDTO> enroll(
             @PathVariable UUID peneiraId
     ) {
 
-        Authentication authentication =
-                SecurityContextHolder
+        Authentication authentication
+                = SecurityContextHolder
                         .getContext()
                         .getAuthentication();
 
-        UUID playerId =
-                (UUID) authentication.getPrincipal();
+        UUID playerId
+                = (UUID) authentication.getPrincipal();
 
         peneiraEnrollmentService.enroll(
                 playerId,
                 peneiraId
         );
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new MessageResponseDTO("Inscrição feita com sucesso!"));
     }
 
     @GetMapping("/enrollments")
     public ResponseEntity<List<PeneiraEnrollmentResponseDTO>> getAll() {
 
-        Authentication authentication =
-                SecurityContextHolder
+        Authentication authentication
+                = SecurityContextHolder
                         .getContext()
                         .getAuthentication();
 
-        UUID playerId =
-                (UUID) authentication.getPrincipal();
+        UUID playerId
+                = (UUID) authentication.getPrincipal();
 
         return ResponseEntity.ok(
                 getPeneiraEnrollmentService.getAll(playerId)
